@@ -19,8 +19,13 @@ type NASAimg struct{
 }
 
 func handlerhome(c *fiber.Ctx)error{
-	message := "hello and welcome oline"
-	return c.JSON(message)
+	var images [] NASAimg
+	if err := db.Find(&images).Error; err!=nil{
+		return c.Status(500).SendString("Failed to fetch images!")
+	}
+
+	return c.Status(fiber.StatusCreated).JSON(images)
+
 }
 
 func main(){
@@ -47,14 +52,17 @@ func main(){
 		fmt.Println("Failed to connect to database !")
 	}
 
+	
+	db.AutoMigrate(&NASAimg{})
 	fmt.Println("Connected to database!")
+
 
 	errorlisten := app.Listen(":8282")
 	if errorlisten != nil {
 		fmt.Println("Failed to connect to route localhost8282")
 	}
 
-	db.AutoMigrate(&NASAimg{})
+	
 
 
 
