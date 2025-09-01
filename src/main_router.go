@@ -1,0 +1,45 @@
+package main
+
+import (
+	"fmt"
+
+	"valeth/handler"
+	"valeth/model"
+
+	"github.com/gofiber/fiber/v2"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+)
+
+var db *gorm.DB
+
+
+func main(){
+
+	app := fiber.New()
+
+	fmt.Println("Hello world this is for NASA image library")
+
+	dsn := "postgresql://postgres.xrsnptveunsdsnfcvxjz:yipikaye2123@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres"
+	var errConnectDb error
+
+	db, errConnectDb = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if errConnectDb != nil {
+		fmt.Println("Failed to connect to database !")
+		return
+	}
+
+	db.AutoMigrate(&model.NasaolineImage{})
+	fmt.Println("Connected to database!")
+	handler.DB = db
+	// Pass DB to handler package after db is initialized!
+
+	app.Get("/", handler.HandlerHome)
+	app.Get("/imgs/:id", handler.HandlerImgDetails)
+	app.Get("/imgs/:id/view", handler.HandlerImgView)
+
+	errorlisten := app.Listen(":8282")
+	if errorlisten != nil {
+		fmt.Println("Failed to connect to route localhost8282")
+	}
+}
