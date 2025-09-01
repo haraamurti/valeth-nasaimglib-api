@@ -36,6 +36,7 @@ func main(){
 
 	app.Get("/", handler.HandlerHome)
 	app.Get("/imgs/:id", handler.HandlerImgDetails)
+	app.Get("/imgs/:id/download", handler.Handlerdownloadimg)
 	app.Get("/imgs/:id/view", handler.HandlerImgView)
 
 	errorlisten := app.Listen(":8282")
