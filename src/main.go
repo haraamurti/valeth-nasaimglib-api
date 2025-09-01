@@ -33,16 +33,7 @@ func main(){
 	app.Get("/",handlerhome)
 	fmt.Println("Hello world this is for NASA image library")
 
-	host := "localhost"
-	user := "postgres"
-	password := "yipikaye2123"
-	port := 5432
-	dbname := "valinenasa" //using database this
-	sslmode := "disable"
-
-
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=%s",
-    host, user, password, dbname, port, sslmode,)
+	dsn := "postgresql://postgres:yipikaye2123@db.xrsnptveunsdsnfcvxjz.supabase.co:5432/postgres"
 
 	var errConnectDb error
 
@@ -63,8 +54,6 @@ func main(){
 	}
 
 	
-
-
 
 }
 
