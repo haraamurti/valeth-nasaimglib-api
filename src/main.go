@@ -10,7 +10,8 @@ import (
 
 var db *gorm.DB
 
-type NASAimg struct{
+type nasaoline_image struct{
+
 	ID int  `json:"id"`
 	Title string
  	URL string `json:"url"`         // Image link
@@ -19,21 +20,46 @@ type NASAimg struct{
 }
 
 func handlerhome(c *fiber.Ctx)error{
-	var images [] NASAimg
+	var images [] nasaoline_image
 	if err := db.Find(&images).Error; err!=nil{
-		return c.Status(500).SendString("Failed to fetch images!")
+		return c.Status(201).SendString("Failed to fetch images!")
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(images)
 
 }
 
+func handlerimgdetails(c *fiber.Ctx)error{
+	idimg := c.Params("id");
+	var img nasaoline_image;
+	result := db.First(&img,idimg)
+	if result.Error == gorm.ErrRecordNotFound{
+		return c.Status(fiber.StatusNotFound).SendString("img Not Found")
+	}
+	return c.JSON(img)
+}
+
+func handlerimgview(c *fiber.Ctx)error{
+	idimg := c.Params("id");
+	var img nasaoline_image;
+	result := db.First(&img,idimg)
+	if result.Error == gorm.ErrRecordNotFound{
+		return c.Status(fiber.StatusNotFound).SendString("img Not Found")
+	}
+    return c.Redirect(img.URL, fiber.StatusFound)
+}
+
 func main(){
 	app := fiber.New()
 	app.Get("/",handlerhome)
+	app.Get("/imgs/:id",handlerimgdetails)
+	app.Get("/imgs/:id/view",handlerimgview)
+
+
+
 	fmt.Println("Hello world this is for NASA image library")
 
-	dsn := "postgresql://postgres:yipikaye2123@db.xrsnptveunsdsnfcvxjz.supabase.co:5432/postgres"
+	dsn := "postgresql://postgres.xrsnptveunsdsnfcvxjz:yipikaye2123@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres"
 
 	var errConnectDb error
 
@@ -41,10 +67,11 @@ func main(){
 
 	if errConnectDb != nil {
 		fmt.Println("Failed to connect to database !")
+		return
 	}
 
-	
-	db.AutoMigrate(&NASAimg{})
+
+	db.AutoMigrate(&nasaoline_image{})
 	fmt.Println("Connected to database!")
 
 
@@ -53,7 +80,9 @@ func main(){
 		fmt.Println("Failed to connect to route localhost8282")
 	}
 
+
 	
+
 
 }
 
