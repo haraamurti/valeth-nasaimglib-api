@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"valeth/handler"
 	"valeth/model"
@@ -39,8 +40,12 @@ func main(){
 	app.Get("/imgs/:id/download", handler.Handlerdownloadimg)
 	app.Get("/imgs/:id/view", handler.HandlerImgView)
 
-	errorlisten := app.Listen(":8282")
+	port := os.Getenv("PORT")
+if port == "" {
+    port = "8282" // fallback for local dev
+}
+	errorlisten := app.Listen(":" + port)
 	if errorlisten != nil {
-		fmt.Println("Failed to connect to route localhost8282")
-	}
+        fmt.Println("Failed to connect to route on port " + port)
+    }
 }
