@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"valeth/model"
+	Utils "valeth/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -76,4 +77,45 @@ func Handlerdownloadimg(c *fiber.Ctx) error {
     }
 
     return nil
+}
+//=========================================================================
+//handler for register jwt tokens
+
+func Register(c *fiber.Ctx) error {
+    // 1. Get the data from the request (we still need this to receive email/password)
+    var requestData struct {
+        Email    string `json:"email"`
+        Password string `json:"password"`
+    }
+    
+    if err := c.BodyParser(&requestData); err != nil {
+        return c.Status(400).JSON(fiber.Map{"error": "Bad request"})
+    }
+
+    // 2. Check if user already exists
+    var existingUser model.User
+    if err := DB.Where("email = ?", requestData.Email).First(&existingUser).Error; err == nil {
+        return c.Status(400).JSON(fiber.Map{"error": "User already exists"})
+    }
+
+    // 3. Hash the password using YOUR function
+    hashedPassword := Utils.GeneratePassword(requestData.Password)
+
+    // 4. Create new user using YOUR User struct
+    user := model.User{
+        Email:        requestData.Email,
+        PasswordHash: hashedPassword,  // Notice: PasswordHash, not Password
+    }
+
+    // 5. Save to database
+    if err := DB.Create(&user).Error; err != nil {
+        return c.Status(500).JSON(fiber.Map{"error": "Failed to create user"})
+    }
+
+    // 6. Return success
+    return c.JSON(fiber.Map{
+        "message": "User created successfully",
+        "user_id": user.ID,
+        "email":   user.Email,
+    })
 }

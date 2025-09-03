@@ -40,6 +40,8 @@ func main(){
 	app.Get("/imgs/:id/download", handler.Handlerdownloadimg)
 	app.Get("/imgs/:id/view", handler.HandlerImgView)
 
+	app.Post("/register",handler.Register)
+
 	port := os.Getenv("PORT")
 if port == "" {
     port = "8282" // fallback for local dev
