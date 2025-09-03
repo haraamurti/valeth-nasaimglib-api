@@ -30,7 +30,7 @@ func main(){
 		return
 	}
 
-	db.AutoMigrate(&model.NasaolineImage{})
+	db.AutoMigrate(&model.NasaolineImage{},&model.User{})
 	fmt.Println("Connected to database!")
 	handler.DB = db
 	// Pass DB to handler package after db is initialized!
