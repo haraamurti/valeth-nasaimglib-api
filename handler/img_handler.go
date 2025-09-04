@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"valeth/Utils"
 	"valeth/model"
+	Utils "valeth/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
