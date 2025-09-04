@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"valeth/Utils"
 	"valeth/model"
-	Utils "valeth/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -118,4 +118,61 @@ func Register(c *fiber.Ctx) error {
         "user_id": user.ID,
         "email":   user.Email,
     })
+}
+
+//=================================================handler login
+func Login (c *fiber.Ctx)error{
+	var loginData struct {
+        Email    string `json:"email"`
+        Password string `json:"password"`
+    }
+
+	if err := c.BodyParser(&loginData); err !=nil{
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Invalid request format",
+            "details": "Please provide valid JSON with email and password",
+	})
+}
+	if loginData.Email == "" || loginData.Password == "" {
+		return c.Status (400).JSON(fiber.Map{
+			"error": "Missing required fields",
+            "details": "Both email and password are required",
+		})
+	}
+	var user model.User
+	if err := DB.Where("email = ?",loginData.Email).First(&user).Error; err !=nil{
+	return c.Status(401).JSON(fiber.Map{
+			"error": "Invalid credentials",
+            "details": "Email or password is incorrect",
+	})
+}
+	if !Utils.ComparePassword(user.PasswordHash, loginData.Password){
+		return c.Status(401).JSON(fiber.Map{
+			"error": "Invalid credentials",
+            "details": "Email or password is incorrect",
+		})
+	}
+
+	token, err := Utils.GenerateToken(user.ID, user.Email)
+    if err != nil {
+        fmt.Printf("Token generation error: %v\n", err)
+        return c.Status(500).JSON(fiber.Map{
+            "error": "Authentication failed",
+            "details": "Unable to generate access token",
+        })
+    }
+
+    // 6. Return successful login with token
+    return c.Status(200).JSON(fiber.Map{
+        "success": true,
+        "message": "Login successful! Welcome to NASA Image Library",
+        "data": fiber.Map{
+            "token":      token,              //  JWT Token for API access
+            "user_id":    user.ID,
+            "email":      user.Email,
+            "expires_in": "24h",
+            "token_type": "Bearer",
+        },
+    })
+
 }

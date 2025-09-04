@@ -41,6 +41,8 @@ func main(){
 	app.Get("/imgs/:id/view", handler.HandlerImgView)
 
 	app.Post("/register",handler.Register)
+	app.Post("/login",handler.Login)
+
 
 	port := os.Getenv("PORT")
 if port == "" {
