@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	utils "valeth/Utils"
 	"valeth/handler"
 	"valeth/model"
+	"valeth/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/driver/postgres"
