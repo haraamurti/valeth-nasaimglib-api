@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 	"valeth/model"
-	Utils "valeth/utils"
+	"valeth/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -100,7 +100,7 @@ func Register(c *fiber.Ctx) error {
     }
 
     // 3. Hash the password using YOUR function
-    hashedPassword := Utils.GeneratePassword(requestData.Password)
+    hashedPassword := utils.GeneratePassword(requestData.Password)
 
     // 4. Create new user using YOUR User struct
     user := model.User{
@@ -147,14 +147,14 @@ func Login (c *fiber.Ctx)error{
             "details": "Email or password is incorrect",
 	})
 }
-	if !Utils.ComparePassword(user.PasswordHash, loginData.Password){
+	if !utils.ComparePassword(user.PasswordHash, loginData.Password){
 		return c.Status(401).JSON(fiber.Map{
 			"error": "Invalid credentials",
             "details": "Email or password is incorrect",
 		})
 	}
 
-	token, err := Utils.GenerateToken(user.ID, user.Email)
+	token, err := utils.GenerateToken(user.ID, user.Email)
     if err != nil {
         fmt.Printf("Token generation error: %v\n", err)
         return c.Status(500).JSON(fiber.Map{
