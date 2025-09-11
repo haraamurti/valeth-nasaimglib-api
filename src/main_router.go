@@ -6,7 +6,6 @@ import (
 
 	"valeth/handler"
 	"valeth/model"
-	"valeth/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/driver/postgres"
@@ -38,8 +37,8 @@ func main(){
 
 	app.Get("/", handler.HandlerHome)
 	app.Get("/imgs/:id",handler.HandlerImgDetails)
-	app.Get("/imgs/:id/download",utils.AuthMiddleware, handler.Handlerdownloadimg)
-	app.Get("/imgs/:id/view", handler.HandlerImgView)
+	app.Get("/imgs/:id/download",handler.Handlerdownloadimg)
+	app.Get("/imgs/:id/view",handler.HandlerImgView)
 
 	app.Post("/register",handler.Register)
 	app.Post("/login",handler.Login)
