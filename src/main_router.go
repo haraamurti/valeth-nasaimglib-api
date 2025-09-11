@@ -37,9 +37,9 @@ func main(){
 	// Pass DB to handler package after db is initialized!
 
 	app.Get("/", handler.HandlerHome)
-	app.Get("/imgs/:id", utils.AuthMiddleware,handler.HandlerImgDetails)
+	app.Get("/imgs/:id",handler.HandlerImgDetails)
 	app.Get("/imgs/:id/download",utils.AuthMiddleware, handler.Handlerdownloadimg)
-	app.Get("/imgs/:id/view",utils.AuthMiddleware, handler.HandlerImgView)
+	app.Get("/imgs/:id/view", handler.HandlerImgView)
 
 	app.Post("/register",handler.Register)
 	app.Post("/login",handler.Login)
