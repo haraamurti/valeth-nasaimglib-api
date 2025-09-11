@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	utils "valeth/Utils"
 	"valeth/handler"
 	"valeth/model"
 
@@ -37,8 +38,8 @@ func main(){
 
 	app.Get("/", handler.HandlerHome)
 	app.Get("/imgs/:id",handler.HandlerImgDetails)
-	app.Get("/imgs/:id/download",handler.Handlerdownloadimg)
-	app.Get("/imgs/:id/view",handler.HandlerImgView)
+	app.Get("/imgs/:id/download",utils.AuthMiddleware,handler.Handlerdownloadimg)
+	app.Get("/imgs/:id/view",utils.AuthMiddleware,handler.HandlerImgView)
 
 	app.Post("/register",handler.Register)
 	app.Post("/login",handler.Login)

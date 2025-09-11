@@ -40,6 +40,7 @@ func HandlerImgDetails(c *fiber.Ctx)error{
 }
 
 func HandlerImgView(c *fiber.Ctx)error{
+    fmt.Println("code is running right")
 	idimg := c.Params("id");
 	var img model.NasaolineImage;
 	result := DB.First(&img,idimg)
