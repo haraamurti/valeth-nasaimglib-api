@@ -11,13 +11,13 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+var DB *gorm.DB //DB yang disin digunakan untuk membuat objek dari gorm.db dimana kita akan bsia menggunakan method method yang ditawarkan dari packgae libarary y tersebut sehingga naun kita akan sambiungkan dengan yan berada di main router.go karena disana kita sudah menmigratenya dengan data data dari objek dan struct terbaru yang dimikliki olleh golang. dan juga appp ini
 
 func HandlerHome(c *fiber.Ctx)error{
-	var images []model.NasaolineImage
+	var images [] model.NasaolineImage
 	if err := DB.Find(&images).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString("Failed to fetch images!")
-	}
+	}//this will pritn all the elemtn and their atributes
 
 	// Build slice of URLs only
 	var urls []string
@@ -25,7 +25,7 @@ func HandlerHome(c *fiber.Ctx)error{
 		urls = append(urls, " "+img.URL+"                  ")
 	}
 
-	return c.Status(fiber.StatusOK).JSON(urls)
+	return c.Status(fiber.StatusOK).JSON(images)
 
 }
 
