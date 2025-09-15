@@ -17,7 +17,7 @@ func HandlerHome(c *fiber.Ctx)error{
 	var images [] model.NasaolineImage
 	if err := DB.Find(&images).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString("Failed to fetch images!")
-	}//this will pritn all the elemtn and their atributes
+	}//this will print all the elemtn and their atributes find returns all the elements in nasaolines table
 
 	// Build slice of URLs only
 	var urls []string
@@ -31,12 +31,13 @@ func HandlerHome(c *fiber.Ctx)error{
 
 func HandlerImgDetails(c *fiber.Ctx)error{
 	var img model.NasaolineImage;
-	idimg := c.Params("id");
-	result := DB.First(&img,idimg)
+	idimg := c.Params("id");//comes from the object declaration in the parameter.
+	result := DB.First(&img,idimg)//learn db first meaning adn learn documentaiton db in gorm first does search the id only for that one and limits to one only.
+    
 	if result.Error == gorm.ErrRecordNotFound{
 		return c.Status(fiber.StatusNotFound).SendString("img Not Found")
 	}
-	return c.JSON(img)
+	return c.JSON(img) // c is from fiber and its methods
 }
 
 func HandlerImgView(c *fiber.Ctx)error{
